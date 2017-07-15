@@ -64,7 +64,7 @@ var purchase = function(){
 
 		//connects to the mysql database and selects the item the user selected above based on the item id number entered
 		connection.query('SELECT * FROM Products WHERE ItemID=?', productPurchased[0].itemID, function(err, res){
-				if(!custPurchase.itemID) console.log(err, 'That item ID doesn\'t exist');
+				if(err) console.log(err, 'That item ID doesn\'t exist');
 				
 				//if the stock quantity available is less than the amount that the user wanted to purchase then the user will be alerted that the product is out of stock
 				if(res[0].StockQuantity < productPurchased[0].Quantity){
