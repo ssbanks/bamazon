@@ -4,8 +4,8 @@ var Table = require('cli-table');
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: '',
-	database: 'Bamazon', 
+	password: 'Passw@rd82!',
+	database: 'bamazon', 
 });
 
 var productPurchased = [];
@@ -43,8 +43,8 @@ var purchase = function(){
 	//creates the questions that will be prompted to the user
 	var productInfo = {
 		properties: {
-			itemID:{description: colors.blue('Please enter the ID # of the item you wish to purchase!')},
-			Quantity:{description: colors.green('How many items would you like to purchase?')}
+			itemID:{description: 'Please enter the ID # of the item you wish to purchase!'},
+			Quantity:{description: 'How many items would you like to purchase?'}
 		},
 	};
 
@@ -64,11 +64,11 @@ var purchase = function(){
 
 		//connects to the mysql database and selects the item the user selected above based on the item id number entered
 		connection.query('SELECT * FROM Products WHERE ItemID=?', productPurchased[0].itemID, function(err, res){
-				if(err) console.log(err, 'That item ID doesn\'t exist');
+				if(!custPurchase.itemID) console.log(err, 'That item ID doesn\'t exist');
 				
 				//if the stock quantity available is less than the amount that the user wanted to purchase then the user will be alerted that the product is out of stock
 				if(res[0].StockQuantity < productPurchased[0].Quantity){
-					console.log('That product is out of stock!');
+					console.log('Insufficient Quantity!');
 					connection.end();
 
 				//otherwise if the stock amount available is more than or equal to the amount being asked for then the purchase is continued and the user is alerted of what items are being purchased, how much one item is and what the total amount is
@@ -94,12 +94,12 @@ var purchase = function(){
 					//this variable contains the newly updated stock quantity of the item purchased
 					newQuantity = res[0].StockQuantity - productPurchased[0].Quantity;
 			
-					// connects to the mysql database products and updates the stock quantity for the item puchased
+					//connects to the mysql database products and updates the stock quantity for the item puchased
 					connection.query("UPDATE Products SET StockQuantity = " + newQuantity +" WHERE ItemID = " + productPurchased[0].itemID, function(err, res){
 						// if(err) throw err;
 						// console.log('Problem ', err);
 						console.log('');
-						console.log(colors.cyan('Your order has been processed.  Thank you for shopping with us!'));
+						console.log('Your order has been processed.  Thank you for shopping with us!');
 						console.log('');
 
 						connection.end();
